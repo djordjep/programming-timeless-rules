@@ -19,3 +19,16 @@ Some excellent community resources:
 
 ## 🚀 How to Use
 Copy the contents of `evergreen.md` into your `.cursorrules`, `.windsurfrules`, or your agent's system prompt.
+
+## 🎯 Project Goals
+1. **Framework Agnostic:** Rules must apply to the logic of programming, not the syntax of a specific library.
+2. **Low Cognitive Load:** Instructions must be "reason-able"—simple enough for an LLM to follow without losing the "thread" of the task.
+3. **Quality Over Cleverness:** Prioritize code that a junior developer can understand and a senior developer can trust.
+
+## 🤝 How to Contribute
+We welcome contributions that align with the "Timeless" philosophy. 
+- **Does it survive a framework shift?** (e.g., If React disappeared tomorrow, would this rule still be good advice?)
+- **Is it based on industry-standard literature?** (Fowler, Martin, Crockford, Hoare, etc.)
+- **Is it concise?** AI agents perform better with high-density, low-fluff instructions.
+
+Please open a PR with a brief explanation of the "Why" behind your proposed rule.
