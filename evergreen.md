@@ -1,40 +1,49 @@
-You are a Senior Software Architect. You prioritize long-term maintainability over cleverness. Follow these industry standards in every response.
+Apply these rules when writing, refactoring, or reviewing code. Do not lecture the user on them unless asked.
+
+**When rules conflict:** Simplicity wins. Do not add an interface, layer, or abstraction for a single implementation. Match the existing codebase’s shape before imposing a new one.
 
 ## 1. Clean Code & Naming (Robert C. Martin)
-- **The Boy Scout Rule:** Always leave the code cleaner than you found it.
-- **Intention-Revealing Names:** Use names that reveal intent. (e.g., `isUserEligible` vs `check`).
-- **Small Functions:** Functions should do one thing and have no side effects. Aim for <20 lines.
-- **Guard Clauses:** Prefer early returns over nested `if/else` blocks to reduce cognitive load.
+- **The Boy Scout Rule:** Leave touched code cleaner than you found it. Do not refactor unrelated code.
+- **Intention-Revealing Names:** Name things by what they mean. (e.g., `isUserEligible` vs `check`).
+- **Small Functions:** Do one thing. No hidden side effects. Aim for <20 lines.
+- **Guard Clauses:** Return early instead of nesting `if/else`.
 
 ## 2. Refactoring & Design (Martin Fowler)
-- **Evolutionary Design:** Do not over-engineer for the future. Build what is needed now, but build it so it is easy to change later.
-- **Eliminate Code Smells:** Actively look for Long Methods, Large Classes, and Shotgun Surgery.
+- **Evolutionary Design (YAGNI):** Build what is needed now, and structure it so it is easy to change later. Do not add features, parameters, or layers for an imagined future.
+- **Eliminate Code Smells:** Split Long Methods, Large Classes, and Shotgun Surgery when you see them.
 - **SOLID Principles:**
-  - (S) Single Responsibility: One reason to change.
-  - (O) Open/Closed: Open for extension, closed for modification.
-  - (L) Liskov Substitution: Subtypes must be substitutable for base types.
-  - (I) Interface Segregation: Do not force clients to depend on unused methods.
+  - (S) Single Responsibility: If a module has two reasons to change, split it before adding more behavior.
+  - (O) Open/Closed: Extend by adding code, not by rewriting working code.
+  - (L) Liskov Substitution: A subtype must work anywhere the base type is used, without surprises.
+  - (I) Interface Segregation: Do not make callers depend on methods they do not use. Split fat interfaces.
   - (D) Dependency Inversion: Depend on abstractions, not concretions.
 
 ## 3. Reliability & Minimalism (Douglas Crockford)
-- **Subtractive Design:** If a language feature is confusing or prone to error (e.g., `==` in JS), do not use it. Use the "Good Parts."
-- **Immutability:** Prefer constants (`const`, `readonly`) and pure functions to prevent shared state bugs.
-- **Self-Documenting Code:** Write code that explains "What" is happening. Use comments ONLY to explain the "Why" (intent) when the code cannot.
-- **KISS (Keep It Simple, Stupid):** Complexity is a liability. Build complex systems by composing small, simple, and testable modules.
+- **Subtractive Design:** If a language feature is confusing or error-prone (e.g., `==` in JS), do not use it. Use the "Good Parts."
+- **Immutability:** Prefer `const`/`readonly` and pure functions over shared mutable state.
+- **Self-Documenting Code:** Let names and structure explain *what*. Comment only *why*, and only when the code cannot.
+- **KISS:** Prefer the simplest design that works. Compose complexity from small, testable modules.
 
 ## 4. Functional Principles
-- **Pure Functions:** Logic should be deterministic (same input = same output) and free of side effects.
-- **Declarative Style:** Describe *what* you want (e.g., `.map()`), not *how* to get it (e.g., `for` loops).
-- **Functional Core, Imperative Shell:** Push side effects (I/O, API calls) to the boundaries; keep the core logic pure.
+- **Pure Functions:** Same input, same output, no side effects.
+- **Declarative Style:** Prefer the idiomatic, high-level form in this language over manual control flow when it is clearer.
+- **Functional Core, Imperative Shell:** Keep I/O and other side effects at the edges; keep core logic pure.
 
 ## 5. Operational Workflow
-1. **Plan Before Action:** For complex tasks, state your architectural plan before writing code.
-2. **Test-First Mindset (TDD):** Write a failing test (or a clear test plan) before writing code. If the logic is hard to test, the design is likely too complex.
-3. **Modularize:** Break large files into smaller, logically grouped modules.
-4. **DRY (Don't Repeat Yourself):** Abstract repetitive logic into reusable utilities.
+1. **Plan Before Action:** For complex tasks, state the plan before writing code.
+2. **Test-First (TDD):** For business logic, write a failing test before the implementation. Skip TDD for config, glue, and generated code. If the logic is hard to test, simplify the design.
+3. **Modularize:** Split large files into smaller, logically grouped modules.
+4. **Finish Check:** Before finishing, scan the diff for magic numbers, nesting deeper than 2, mixed concerns, and files the task did not require.
 
-## 6. The "No-Fly" List (Prohibited Patterns)
-- **No Magic Numbers:** All literal values must be named constants.
-- **No Deep Nesting:** If you hit 3 levels of indentation, refactor.
-- **No "Kitchen Sink" Classes:** If a class/file is doing two different things, split it.
-- **No Clever One-Liners:** If a "short" line of code takes more than 5 seconds to wrap your head around, write it out clearly instead.
+## 6. Structure & Review
+- **DRY:** One piece of knowledge, one place. Extract shared rules, not coincidental similarity.
+- **CRAP:** Untested complexity is a merge blocker. If a unit has many branches and few tests, shrink it or add coverage—preferably both.
+- **Architectural Review:** Keep existing module boundaries. No circular dependencies, no infrastructure in domain logic, no new architectural pattern without a stated reason.
+- **Encapsulation:** Expose a narrow public API. Do not leak internals (storage, third-party types, private helpers).
+- **Separation of Concerns:** Keep domain, presentation, and I/O apart. A change to one must not force edits in the others.
+
+## 7. The "No-Fly" List (Prohibited Patterns)
+- **No Magic Numbers:** Name literals that carry meaning. Leave obvious values (`0`, `1`, `-1`, `""`) alone.
+- **No Deep Nesting:** At 3 levels of indentation, refactor.
+- **No "Kitchen Sink" Classes:** If a class/file does two different things, split it.
+- **No Clever One-Liners:** If a short line is hard to parse, write it out.
